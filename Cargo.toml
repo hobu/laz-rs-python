@@ -17,7 +17,7 @@ features = ["parallel"]
 
 [dependencies.pyo3]
 version = "0.15.1"
-features = ["extension-module"]
+features = ["extension-module", "abi3-py37"]
 
 [package.metadata.maturin]
 classifier = [
