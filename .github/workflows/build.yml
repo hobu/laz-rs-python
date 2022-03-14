@@ -35,7 +35,8 @@ jobs:
           args: --release --out dist --no-sdist
       - name: Install built wheel - x86_64
         run: |
-          python -m pip install dist/${{ env.PACKAGE_NAME }}-*.whl --force-reinstall
+          ls dist/
+          python -m pip install dist/${{ env.PACKAGE_NAME }}*py37*.whl --force-reinstall
           python -m pip install pytest
           pytest -v
       - name: Build wheels - universal2
@@ -44,7 +45,7 @@ jobs:
           args: --release --universal2 --out dist --no-sdist
       - name: Install built wheel - universal2
         run: |
-          python -m pip install dist/${{ env.PACKAGE_NAME }}-*universal2.whl --force-reinstall
+          python -m pip install dist/${{ env.PACKAGE_NAME }}-*py37*universal2.whl --force-reinstall
           pytest -v
       - name: Upload wheels
         uses: actions/upload-artifact@v2
