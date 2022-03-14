@@ -37,8 +37,6 @@ jobs:
         run: |
           ls dist/
           python -m pip install dist/${{ env.PACKAGE_NAME }}*cp37*.whl --force-reinstall
-          python -m pip install pytest
-          pytest -v
       - name: Build wheels - universal2
         uses: messense/maturin-action@v1
         with:
