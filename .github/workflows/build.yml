@@ -38,14 +38,15 @@ jobs:
       - name: Install built wheel - x86_64
         run: |
           ls dist/
-          python -m pip install dist/${{ env.PACKAGE_NAME }}*.whl --force-reinstall
+          #          python -m pip install dist/${{ env.PACKAGE_NAME }}*cp37*.whl --force-reinstall
       - name: Build wheels - universal2
         uses: messense/maturin-action@v1
         with:
           args: --release --universal2 --out dist --no-sdist
       - name: Install built wheel - universal2
         run: |
-          python -m pip install dist/${{ env.PACKAGE_NAME }}*universal2.whl --force-reinstall
+          ls dist/
+          #          python -m pip install dist/${{ env.PACKAGE_NAME }}*cp37*universal2.whl --force-reinstall
       - name: Upload wheels
         uses: actions/upload-artifact@v2
         with:
