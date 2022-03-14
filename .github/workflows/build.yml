@@ -35,8 +35,8 @@ jobs:
           args: --release --out dist
       - name: Install built wheel - x86_64
         run: |
-          pip install dist/${{ env.PACKAGE_NAME }}-*.whl --force-reinstall
-          pip install pytest
+          python -m pip install dist/${{ env.PACKAGE_NAME }}-*.whl --force-reinstall
+          python -m pip install pytest
           pytest -v
       - name: Build wheels - universal2
         uses: messense/maturin-action@v1
@@ -44,7 +44,7 @@ jobs:
           args: --release --universal2 --out dist --no-sdist
       - name: Install built wheel - universal2
         run: |
-          pip install dist/${{ env.PACKAGE_NAME }}-*universal2.whl --force-reinstall
+          python -m pip install dist/${{ env.PACKAGE_NAME }}-*universal2.whl --force-reinstall
           pytest -v
       - name: Upload wheels
         uses: actions/upload-artifact@v2
@@ -91,29 +91,33 @@ jobs:
     strategy:
       matrix:
         target: [x86_64, i686]
+        python-version: ["3.7", "pypy-3.7"]
+        include:
+          - python-version: "3.7"
+            wheel-glob: "cp37"
+          - python-version: "pypy-3.7"
+            wheel-glob: "pp37"
+            target: "x86_64"
+          - python-version: "pypy-3.7"
+            wheel-glob: "pp37"
+            target: "i686"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          architecture: x64
       - name: Build wheels
         uses: messense/maturin-action@v1
         with:
           target: ${{ matrix.target }}
           manylinux: auto
-          args: --release --out dist --no-sdist
+          args: --release --out dist --no-sdist --interpreter python
       - name: Install built wheel
         if: matrix.target == 'x86_64'
         run: |
-          pip install dist/${{ env.PACKAGE_NAME }}-*.whl --force-reinstall
-          pip install pytest
+          python -m pip install dist/${{ env.PACKAGE_NAME }}*${{ matrix.wheel-glob }}*.whl --force-reinstall
+          python -m pip install pytest
           pytest -v
-      - name: Upload wheels
-        uses: actions/upload-artifact@v2
-        with:
-          name: wheels
-          path: dist
 
   linux-cross:
     runs-on: ubuntu-latest
@@ -268,6 +272,6 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          pip install --upgrade twine
+          python -m pip install --upgrade twine
           twine upload --skip-existing *
 
