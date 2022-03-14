@@ -76,6 +76,8 @@ jobs:
         with:
           target: ${{ matrix.target }}
           manylinux: auto
+          rust-toolchain: nightly
+          maturin-version: latest
           args: --release --out dist --no-sdist
       - name: Fake install
         run: |
